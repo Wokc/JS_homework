@@ -8,4 +8,4 @@ for (; a < 101; a++) {
 
 console.log("ex3 " + result);
 
-console.log();
+console.log("");
