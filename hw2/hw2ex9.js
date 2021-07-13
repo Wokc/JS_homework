@@ -12,16 +12,11 @@ console.log(years + " лет, " + month + " месяцев, " + weeks + " нед
 
 if (years >= 1 ){
     console.log("ex№9   " + years + " лет, " + month + " месяцев, " + weeks + " недель, " + hours + " часов, " + minuts + " минут, " + seconds + " секунд.");
-};
-
-else if (years == 0 && month > 1) {
+} else if (years == 0 && month > 1) {
         console.log("ex№9   " + "Меньше года, " + month + " месяцев, " + weeks + " недель, " + hours + " часов, " + minuts + " минут, " + seconds + " секунд.");
-};
-
-else if (month < 1 && days > 7) {
+} else if (month < 1 && days > 7) {
     console.log("ex№9   " + "Меньше года, меньше месяца, " + weeks + " недель, " + hours + " часов, " + minuts + " минут, " + seconds + " секунд.");
-};
-else if (month < 1 && days < 7) {
+} else if (month < 1 && days < 7) {
     console.log("ex№9   " + "Меньше года, меньше месяца, меньше недели, " + hours + " часов, " + minuts + " минут, " + seconds + " секунд.");
 };
 
