@@ -1,8 +1,8 @@
 
 a = 1;
 
-let z;
-let x;
+let z,
+    x;
 
 for (; a < 6; a++) {
     z = a;
