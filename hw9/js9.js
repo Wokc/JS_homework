@@ -31,6 +31,7 @@ h1,h2,h3,h4,h5{
 
 .content{
     width: 1200px;
+    min-height: 900px;
     margin: 0px auto;
     background-color: #e4e4e4;
 }
@@ -59,8 +60,18 @@ h1{
     font-size: 20px;
     padding: 10px 10px;
     border-radius: 5px;
-    border: 2px solid;
+    border: 2px solid transparent;
     margin: 10px;
+    outline:none;
+    transition: linear 0.1s;
+}
+
+.task-input:focus{
+    border-color: #8bc34a;
+}
+
+.task-input:hover{
+    border-color: #6bc305;
 }
 
 .tasks{
@@ -72,8 +83,10 @@ h1{
 }
 
 h4{
+    font-family: 'Cabin', sans-serif;
     text-align:center;
     font-size: 25px;
+    margin-top: 10px;
 }
 
 .task{
@@ -81,28 +94,59 @@ h4{
     align-items: center;
     justify-content: space-between;
     width: 70%;
-    border-bottom: 1px solid black;
-    margin-bottom: 10px;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+    transition: linear 0.1s;
+}
+
+.task:hover{
+    border-color: #8bc34a;
 }
 
 .task-checkbox{
-    margin-right: 20px;
-    height: 40px;
-    width: 40px;
+    margin: 18px 15px 18px 15px ;
+    height: 30px;
+    width: 30px;
 }
 
 .task-btn{
     font-size: 20px;
+    border: none;
     border-radius: 10px;
     background-color: #8bc34a;
     padding: 10px 30px;
     margin: 10px;
+    transition: linear 0.1s;
 }
 
+.task-btn:hover{
+    color: white;
+    background-color: #6bc305;
+}
+
+.clear-btn{
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #8bc34a;
+    padding: 10px 30px;
+    margin: 10px;
+    transition: linear 0.1s;
+}
+
+.clear-btn:hover{
+    color: white;
+    background-color: #6bc305;
+}
+
+// .clear-btn:hover ~ .task {
+//     border-color: #ef0655; 
+// }
+
 .task__btns{
-    width: 15%;
+    width: 20%;
     display:flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -112,16 +156,57 @@ h4{
 }
 
 .fa{
-    font-size: 30px;
-    margin: 5px;
+    font-size: 25px;
+    margin: 10px;
+    transition: linear 0.1s;
+}
+
+.fa-pencil-square-o{
+    padding-top: 5px;
+}
+
+.fa-trash-o:hover{
+    transform: scale(1.3);
+}
+
+.fa-pencil-square-o:hover{
+    transform: scale(1.3);
 }
 
 .complete p{
     text-decoration: line-through;
 }
+
+.task-edit{
+    font-size: 20px;
+    width: 70%;
+    height: 100%;
+    margin-right: 5px;
+    padding: 5px 5px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    outline:none;
+}
+
+.task-edit:hover{
+    border-color: #8bc34a;
+}
+
+.task-btn_add{
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #8bc34a;
+    padding: 6px 6px;
+    margin: 0px auto;
+    transition: linear 0.1s;
+}
+
+.task-btn_add:hover{
+    color: white;
+    background-color: #6bc305;
+}
 `;
-
-
 
 function ToDo() {
     this.list = [];
@@ -181,42 +266,169 @@ function ToDo() {
 
         console.log(inputValue);
 
-        console.log(this.list.indexOf(inputValue));
+// EDIT button 
 
-        deletbtn.addEventListener('click', function (){
-      
+        editbtn.addEventListener('click', function (){ 
+            let addbtn = document.createElement('input');
+
+            task__btns.insertBefore(addbtn, editbtn);
+    
+            addbtn.setAttribute("class", "task-btn_add");
+            addbtn.setAttribute("value", "save");
+            addbtn.setAttribute("type", "submit");
+
+            taskText.remove();
+            editbtn.remove();
+
+            let editinput = document.createElement('input');
+
+            task.insertBefore(editinput, task__btns);
+    
+            editinput.setAttribute("class", "task-edit");
+
+            editinput.setAttribute("type", "text");
+            
+            editinput.focus();
+            editinput.setAttribute("value", inputValue);
+
+            document.querySelector('.task-edit').addEventListener('keyup', function (event){
+                
+                event.preventDefault();
+
+                if(event.keyCode == '13') {
+                    if (document.querySelector('.task-edit').value == inputValue){
+                        editinput.remove();
+    
+                        addbtn.remove();
+                      
+                        task.insertBefore(taskText, task__btns);
+    
+                        taskText.setAttribute("class", "task-text");
+                    
+                        taskText.innerHTML = inputValue;
+    
+                        task__btns.insertBefore(editbtn, deletbtn);
+    
+                    } else {
+    
+                        newinputValue = document.querySelector('.task-edit').value;
+                    
+                        editinput.remove();
+    
+                        addbtn.remove();
+    
+                        task.insertBefore(taskText, task__btns);
+    
+                        taskText.setAttribute("class", "task-text");
+                    
+                        taskText.innerHTML = newinputValue;
+    
+                        todo.edit(inputValue, newinputValue);
+    
+                        inputValue = newinputValue;
+    
+                        task__btns.insertBefore(editbtn, deletbtn);
+                    };
+                }
+            });
+
+
+
+            document.querySelector('.task-btn_add').addEventListener('click', function (event){
+
+                event.preventDefault();
+              
+                if (document.querySelector('.task-edit').value == inputValue){
+                    editinput.remove();
+
+                    addbtn.remove();
+                  
+                    task.insertBefore(taskText, task__btns);
+
+                    taskText.setAttribute("class", "task-text");
+                
+                    taskText.innerHTML = inputValue;
+
+                    task__btns.insertBefore(editbtn, deletbtn);
+
+                } else {
+
+                    newinputValue = document.querySelector('.task-edit').value;
+                
+                    editinput.remove();
+
+                    addbtn.remove();
+
+                    task.insertBefore(taskText, task__btns);
+
+                    taskText.setAttribute("class", "task-text");
+                
+                    taskText.innerHTML = newinputValue;
+
+                    todo.edit(inputValue, newinputValue);
+
+                    inputValue = newinputValue;
+
+                    task__btns.insertBefore(editbtn, deletbtn);
+                };
+                
+
+                
+
+                document.querySelector(".task-input").value = "";  
+
+            });
+        
+        });
+
+        deletbtn.addEventListener('click', function (){ 
+            task.remove();
             todo.remove(inputValue);
         
         });
            
         checkbox.addEventListener('change', function(){
-
-                todo.complete(inputValue);
+            task.classList.toggle('complete');
+            // todo.complete(inputValue);
          });
 
     };
-  
+    
+    // this.update = function () {
 
-    // this.edit = function(index) {
-    //     let task = promt("Отредактируй задачу: ", this.list[index]);
-    //     this.list[index] = task; 
-    // };
+    //     document.querySelector('.tasks').innerHTML = '';
+
+    //     this.list.forEach (elem => {
+    //         this.add(elem);
+    //     })
+    // }
+
+    this.clearList = function() {
+        this.list = [];
+    };
+
+    this.edit = function(inputValue, newinputValue) {
+        let changeindex = this.list.indexOf(inputValue);
+
+
+
+        this.list[changeindex] = newinputValue; 
+    };
 
     this.remove = function(inputValue) {
             let deletIndex = this.list.indexOf(inputValue);
-            console.log('---------');
-            console.log(deletIndex);
-            this.list.splice(deletIndex, 1);
-            document.getElementById(deletIndex).remove();
-    };
 
-        
-    this.complete = function(inputValue) {
-        let completeindex = this.list.indexOf(inputValue);
-        console.log(completeindex);
-        this.list.splice(completeindex, 1);
-        document.getElementById(completeindex).setAttribute('class', 'task complete');
+            this.list.splice(deletIndex, 1);
+            // this.update();
     };
+        
+    // this.complete = function(inputValue) {
+    //     let completeindex = this.list.indexOf(inputValue);
+
+    //     // this.list.splice(completeindex, 1);
+
+    //     // document.getElementById(completeindex).setAttribute('class', 'task complete');
+    // };
 
 
     this.show = function() {
@@ -234,11 +446,47 @@ document.querySelector('.task-btn').addEventListener('click', function (event){
     event.preventDefault();
 
     if (document.querySelector('.task-input').value == ""){
-
+        
     } else {
         todo.add(document.querySelector('.task-input').value);
+        
     }
-    
+    document.querySelector('.task-input').focus();
     document.querySelector(".task-input").value = "";  
+
+});
+
+
+document.querySelector('.clear-btn').addEventListener('click', function (event){
+
+    event.preventDefault();
+
+    let arr = document.querySelectorAll('.task');
+
+    for(let i = arr.length; i > 0; i--) {
+        document.querySelector('.task').remove();
+    }
+
+    todo.clearList();
+
+    document.querySelector('.task-input').focus();
+    document.querySelector(".task-input").value = "";  
+
+});
+
+
+
+document.querySelector('.task-input').addEventListener('keyup', function (event){
+
+    if(event.keyCode == '13') {
+        if (document.querySelector('.task-input').value == ""){
+        
+        } else {
+            todo.add(document.querySelector('.task-input').value);
+            
+        }
+        document.querySelector('.task-input').focus();
+        document.querySelector(".task-input").value = "";  
+    };
 
 });
