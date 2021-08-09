@@ -97,6 +97,8 @@ h4{
     border-bottom: 2px solid black;
     margin-bottom: 5px;
     transition: linear 0.1s;
+    position: relative;
+    padding-bottom: 10px;
 }
 
 .task:hover{
@@ -139,10 +141,6 @@ h4{
     background-color: #6bc305;
 }
 
-// .clear-btn:hover ~ .task {
-//     border-color: #ef0655; 
-// }
-
 .task__btns{
     width: 20%;
     display:flex;
@@ -173,7 +171,7 @@ h4{
     transform: scale(1.3);
 }
 
-.complete p{
+.complete{
     text-decoration: line-through;
 }
 
@@ -206,6 +204,16 @@ h4{
     color: white;
     background-color: #6bc305;
 }
+
+.red-border{
+    border-color: red;
+}
+
+.date{
+    position: absolute;
+    right: 140px;
+    bottom: -14px;
+}
 `;
 
 function ToDo() {
@@ -213,8 +221,14 @@ function ToDo() {
     this.listCompleted = [];
 
     this.add = function(inputValue) {
-  
-        this.list.push(inputValue);
+
+        let now = new Date().toLocaleString();
+
+        console.log("1 " + now)
+
+        let taskValue = {value: inputValue, date: now};
+
+        this.list.push(taskValue);
 
         // let idNumber = this.list.length - 1;
 
@@ -264,11 +278,19 @@ function ToDo() {
 
         deletbtn.setAttribute("aria-hidden", "true");
 
-        console.log(inputValue);
+        let addDate = document.createElement('p');
+
+        task.appendChild(addDate);
+
+        addDate.setAttribute("class", "date");
+
+        addDate.innerHTML = 'Created  ' + now;
+
 
 // EDIT button 
 
         editbtn.addEventListener('click', function (){ 
+
             let addbtn = document.createElement('input');
 
             task__btns.insertBefore(addbtn, editbtn);
@@ -287,15 +309,44 @@ function ToDo() {
             editinput.setAttribute("class", "task-edit");
 
             editinput.setAttribute("type", "text");
+        
+            console.log(editinput.value.length);
             
-            editinput.focus();
             editinput.setAttribute("value", inputValue);
+
+            editinput.selectionStart = editinput.value.length;
+
+            editinput.focus();
+
+            
+    // при покидании фокуса с inputa , что бы нельзя было рекдактировать несколько записей одновременно
+
+            task.addEventListener('mouseleave', function (event){
+                        
+                event.preventDefault();
+
+                editinput.remove();
+
+                        addbtn.remove();
+                    
+                        task.insertBefore(taskText, task__btns);
+
+                        taskText.setAttribute("class", "task-text");
+                    
+                        taskText.innerHTML = inputValue;
+
+                        task__btns.insertBefore(editbtn, deletbtn);
+            });
+
+            // при нажатии на Enter сохранение
 
             document.querySelector('.task-edit').addEventListener('keyup', function (event){
                 
                 event.preventDefault();
 
                 if(event.keyCode == '13') {
+
+                    // если ничего новго не добавлено 
                     if (document.querySelector('.task-edit').value == inputValue){
                         editinput.remove();
     
@@ -308,7 +359,9 @@ function ToDo() {
                         taskText.innerHTML = inputValue;
     
                         task__btns.insertBefore(editbtn, deletbtn);
-    
+                    
+                    // если в input изменения
+
                     } else {
     
                         newinputValue = document.querySelector('.task-edit').value;
@@ -322,8 +375,13 @@ function ToDo() {
                         taskText.setAttribute("class", "task-text");
                     
                         taskText.innerHTML = newinputValue;
-    
-                        todo.edit(inputValue, newinputValue);
+                        
+                        
+                        todo.edit(taskValue, newinputValue);
+
+                        let NewDate = new Date().toLocaleString();
+
+                        addDate.innerHTML = 'Edited  ' + NewDate;
     
                         inputValue = newinputValue;
     
@@ -365,14 +423,18 @@ function ToDo() {
                 
                     taskText.innerHTML = newinputValue;
 
-                    todo.edit(inputValue, newinputValue);
+                    todo.edit(taskValue, newinputValue);
+
+                    let NewDate = new Date().toLocaleString();
+
+                    addDate.innerHTML = 'Edited  ' + NewDate;
 
                     inputValue = newinputValue;
 
                     task__btns.insertBefore(editbtn, deletbtn);
                 };
                 
-
+            
                 
 
                 document.querySelector(".task-input").value = "";  
@@ -380,6 +442,8 @@ function ToDo() {
             });
         
         });
+        
+        // кнопка delete
 
         deletbtn.addEventListener('click', function (){ 
             task.remove();
@@ -387,8 +451,10 @@ function ToDo() {
         
         });
            
+        // checkbox
+
         checkbox.addEventListener('change', function(){
-            task.classList.toggle('complete');
+            taskText.classList.toggle('complete');
             // todo.complete(inputValue);
          });
 
@@ -407,12 +473,13 @@ function ToDo() {
         this.list = [];
     };
 
-    this.edit = function(inputValue, newinputValue) {
-        let changeindex = this.list.indexOf(inputValue);
+    this.edit = function(a, newinputValue,) {
 
+        let changeindex = this.list.indexOf(a);
 
+        let NewDate = new Date().toLocaleString();      
 
-        this.list[changeindex] = newinputValue; 
+        this.list[changeindex] = {value: newinputValue, date: NewDate}; 
     };
 
     this.remove = function(inputValue) {
@@ -448,6 +515,7 @@ document.querySelector('.task-btn').addEventListener('click', function (event){
     if (document.querySelector('.task-input').value == ""){
         
     } else {
+        
         todo.add(document.querySelector('.task-input').value);
         
     }
@@ -473,6 +541,36 @@ document.querySelector('.clear-btn').addEventListener('click', function (event){
     document.querySelector(".task-input").value = "";  
 
 });
+
+
+document.querySelector('.clear-btn').addEventListener('mouseenter', function (event){
+
+    event.preventDefault();
+
+    let allTasks =  document.querySelectorAll('.task');
+
+    allTasks.forEach(function (elem) {
+        elem.classList.add('red-border');
+        
+    });
+
+});
+
+
+
+document.querySelector('.clear-btn').addEventListener('mouseleave', function (event){
+
+    event.preventDefault();
+
+    let allTasks =  document.querySelectorAll('.task');
+
+    allTasks.forEach(function (elem) {
+        elem.classList.remove('red-border');
+        
+    });
+
+});
+
 
 
 
