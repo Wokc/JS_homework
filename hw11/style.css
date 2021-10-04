@@ -1,0 +1,35 @@
+
+
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+h1,h2,h3,h4,h5{
+    margin: 0px;
+    padding: 0px;
+}
+
+.content{
+    width: 1200px;
+    min-height: 900px;
+    margin: 0px auto;
+    background-color: #e4e4e4;
+}
+
+.contactCreate {
+    margin: 40px auto 40px auto;
+}
+
+.contactForm{
+    margin: 0px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.contactForm input {
+    width: 30%;
+    margin-top: 10px;
+
+}
