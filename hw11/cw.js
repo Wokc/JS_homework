@@ -86,12 +86,15 @@ class Contacts {
 }
 const contacts = new Contacts
 
-class ContactsUI {
+class ContactsUI extends Contacts {
     constructor() {
         this.init();
     }
 
     init(){
+        const content = document.createElement('div');
+        content.classList.add('content');
+
         const contactCreate = document.createElement('div');
         contactCreate.classList.add('contactCreate');
 
@@ -124,16 +127,18 @@ class ContactsUI {
 
         contactForm.append(contactName, contactAddress, contactEmail, contactPhone);
         contactCreate.append(contactForm);
-        document.body.append(contactCreate);
+        content.append(contactCreate);
+        document.body.append(content);
+    }
 
+    update() {
+        console.log(this.data.user)
+        this.data.forEach((user){
 
+        })
     }
 }
 
-new ContactsUI();
-
-// const NewUser = new User ({
-//     name: 'Alex',
 //     email: 'Alex.gmail.com',
 //     phone: '9547817'
 // });
