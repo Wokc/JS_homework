@@ -84,16 +84,28 @@ class Contacts {
         return this.data;
     };
 }
-const contacts = new Contacts
+
 
 class ContactsUI extends Contacts {
+    super (){
+        
+    };
     constructor() {
+        super ();
         this.init();
     }
 
     init(){
+        const h1 = document.createElement('h1');
+        h1.classList.add('h1');
+        h1.innerHTML = 'Phone Book';
+
         const content = document.createElement('div');
         content.classList.add('content');
+
+        const AddContact = document.createElement('h2');
+        AddContact.classList.add('AddContact');
+        AddContact.innerHTML = 'Add Contact';
 
         const contactCreate = document.createElement('div');
         contactCreate.classList.add('contactCreate');
@@ -126,18 +138,25 @@ class ContactsUI extends Contacts {
         contactPhone.classList.add('contactPhone')
 
         contactForm.append(contactName, contactAddress, contactEmail, contactPhone);
-        contactCreate.append(contactForm);
-        content.append(contactCreate);
+        contactCreate.append(AddContact, contactForm);
+        content.append(h1,contactCreate);
         document.body.append(content);
     }
 
     update() {
         console.log(this.data.user)
-        this.data.forEach((user){
+        // this.data.forEach((user){
 
-        })
+        // })
     }
 }
+
+
+const contacts = new Contacts
+
+const ui = new ContactsUI
+
+
 
 //     email: 'Alex.gmail.com',
 //     phone: '9547817'

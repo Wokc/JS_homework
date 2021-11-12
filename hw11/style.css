@@ -18,8 +18,18 @@ h1,h2,h3,h4,h5{
     background-color: #e4e4e4;
 }
 
+.h1 {
+    text-align: center;
+    padding-top: 20px;
+
+}
+
 .contactCreate {
     margin: 40px auto 40px auto;
+}
+
+.AddContact{
+    margin: 0 20px;
 }
 
 .contactForm{
